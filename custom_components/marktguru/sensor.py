@@ -62,26 +62,8 @@ class MarktguruOfferSensor(
     @property
     def extra_state_attributes(self) -> dict[str, Any] | None:
         offers = self._get_offers()
-        if not offers:
-            return {
-                "description": None,
-                "vendor": None,
-                "valid_from": None,
-                "valid_to": None,
-                "image_url": None,
-                "additional_offers": [],
-            }
-
-        best = offers[0]
-        additional = [o.to_dict() for o in offers[1:]]
-
         return {
-            "description": best.description,
-            "vendor": best.retailer_name,
-            "valid_from": best.valid_from.isoformat() if best.valid_from else None,
-            "valid_to": best.valid_to.isoformat() if best.valid_to else None,
-            "image_url": best.image_url,
-            "additional_offers": additional,
+            "offers": [o.to_dict() for o in offers],
         }
 
     def _get_offers(self) -> list[Offer]:

@@ -101,11 +101,12 @@ class TestMarktguruOfferSensor:
             zip_code="86156",
         )
         attrs = sensor.extra_state_attributes
-        assert attrs["description"] == "Best offer"
-        assert attrs["vendor"] == "REWE"
-        assert attrs["image_url"] == "https://example.com/img.jpg"
-        assert len(attrs["additional_offers"]) == 1
-        assert attrs["additional_offers"][0]["price"] == 12.99
+        assert len(attrs["offers"]) == 2
+        assert attrs["offers"][0]["price"] == 9.99
+        assert attrs["offers"][0]["description"] == "Best offer"
+        assert attrs["offers"][0]["retailer_name"] == "REWE"
+        assert attrs["offers"][1]["price"] == 12.99
+        assert attrs["offers"][1]["description"] == "Second offer"
 
     def test_attributes_no_offers(self):
         coordinator = _make_coordinator({"Franziskaner": []})
@@ -115,9 +116,7 @@ class TestMarktguruOfferSensor:
             zip_code="86156",
         )
         attrs = sensor.extra_state_attributes
-        assert attrs["description"] is None
-        assert attrs["vendor"] is None
-        assert attrs["additional_offers"] == []
+        assert attrs["offers"] == []
 
     def test_unique_id(self):
         coordinator = _make_coordinator({})
@@ -155,10 +154,10 @@ class TestMarktguruOfferSensor:
             zip_code="86156",
         )
         attrs = sensor.extra_state_attributes
-        assert attrs["valid_from"] is not None
-        assert attrs["valid_to"] is not None
+        assert attrs["offers"][0]["valid_from"] is not None
+        assert attrs["offers"][0]["valid_to"] is not None
 
-    def test_additional_offers_empty_when_single_offer(self):
+    def test_single_offer_in_array(self):
         offer = _make_offer()
         coordinator = _make_coordinator({"Franziskaner": [offer]})
         sensor = MarktguruOfferSensor(
@@ -167,9 +166,9 @@ class TestMarktguruOfferSensor:
             zip_code="86156",
         )
         attrs = sensor.extra_state_attributes
-        assert attrs["additional_offers"] == []
+        assert len(attrs["offers"]) == 1
 
-    def test_multiple_additional_offers(self):
+    def test_multiple_offers_sorted_by_price(self):
         offers = [
             _make_offer(offer_id=f"offer-{i}", price=9.99 + i * 3) for i in range(4)
         ]
@@ -181,7 +180,8 @@ class TestMarktguruOfferSensor:
         )
         attrs = sensor.extra_state_attributes
         assert sensor.native_value == 9.99
-        assert len(attrs["additional_offers"]) == 3
+        assert len(attrs["offers"]) == 4
+        assert attrs["offers"][0]["price"] == 9.99
 
     def test_attributes_none_dates(self):
         offer = Offer(
@@ -199,5 +199,5 @@ class TestMarktguruOfferSensor:
             zip_code="86156",
         )
         attrs = sensor.extra_state_attributes
-        assert attrs["valid_from"] is None
-        assert attrs["valid_to"] is None
+        assert attrs["offers"][0]["valid_from"] is None
+        assert attrs["offers"][0]["valid_to"] is None

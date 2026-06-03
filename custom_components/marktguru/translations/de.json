@@ -1,0 +1,43 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Marktguru",
+        "description": "Marktguru-Integration einrichten",
+        "data": {
+          "zip_code": "Postleitzahl",
+          "client_key": "Client Key (x-clientkey Header)",
+          "api_key": "API Key (x-apikey Header)"
+        }
+      },
+      "products": {
+        "title": "Produkte & Händler",
+        "description": "Konfiguriere, welche Produkte und Händler überwacht werden sollen",
+        "data": {
+          "products": "Produkte (kommagetrennt)",
+          "allowed_retailers": "Erlaubte Händler"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Verbindung zur Marktguru-API fehlgeschlagen",
+      "products_required": "Mindestens ein Produkt ist erforderlich"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Marktguru Optionen",
+        "description": "Aktualisiere deine Produktsucheinstellungen",
+        "data": {
+          "products": "Produkte (kommagetrennt)",
+          "allowed_retailers": "Erlaubte Händler",
+          "scan_interval": "Aktualisierungsintervall (Stunden)"
+        }
+      }
+    },
+    "error": {
+      "products_required": "Mindestens ein Produkt ist erforderlich"
+    }
+  }
+}

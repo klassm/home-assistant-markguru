@@ -1,0 +1,43 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Marktguru",
+        "description": "Set up your Marktguru integration",
+        "data": {
+          "zip_code": "Zip Code",
+          "client_key": "Client Key (x-clientkey header)",
+          "api_key": "API Key (x-apikey header)"
+        }
+      },
+      "products": {
+        "title": "Products & Retailers",
+        "description": "Configure which products and retailers to track",
+        "data": {
+          "products": "Products (comma-separated)",
+          "allowed_retailers": "Allowed Retailers"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect to Marktguru API",
+      "products_required": "At least one product is required"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Marktguru Options",
+        "description": "Update your product tracking preferences",
+        "data": {
+          "products": "Products (comma-separated)",
+          "allowed_retailers": "Allowed Retailers",
+          "scan_interval": "Update Interval (hours)"
+        }
+      }
+    },
+    "error": {
+      "products_required": "At least one product is required"
+    }
+  }
+}

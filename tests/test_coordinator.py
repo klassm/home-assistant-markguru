@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime
 from unittest.mock import AsyncMock
 
 import pytest
@@ -11,10 +11,10 @@ from custom_components.marktguru.coordinator import (
 )
 from custom_components.marktguru.models import Offer
 
-FILTER_NOW = datetime(2025, 6, 1, 12, 0, 0, tzinfo=UTC)
+FILTER_NOW = date(2025, 6, 1)
 
-VALID_FROM = datetime(2020, 1, 1, 0, 0, tzinfo=UTC)
-VALID_TO = datetime(2030, 12, 31, 23, 59, 59, tzinfo=UTC)
+VALID_FROM = date(2020, 1, 1)
+VALID_TO = date(2030, 12, 31)
 
 
 class TestFilterOffers:

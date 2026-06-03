@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import date
 from unittest.mock import MagicMock
 
 from custom_components.marktguru.models import Offer
@@ -29,9 +29,9 @@ def _make_offer(
     product_name="Franziskaner Weissbier 500ml",
 ):
     if valid_from is None:
-        valid_from = datetime(2025, 5, 26, 0, 0, 0, tzinfo=UTC)
+        valid_from = date(2025, 5, 26)
     if valid_to is None:
-        valid_to = datetime(2025, 6, 7, 23, 59, 59, tzinfo=UTC)
+        valid_to = date(2025, 6, 7)
     return Offer(
         id=offer_id,
         price=price,

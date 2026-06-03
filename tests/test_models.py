@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime
 
-from custom_components.marktguru.models import Offer, _parse_datetime
+from custom_components.marktguru.models import Offer, _parse_datetime, _round_to_date
 
 
 class TestOfferFromApi:
@@ -22,8 +22,8 @@ class TestOfferFromApi:
         offer = Offer.from_api(sample_offer_raw)
         assert offer.valid_from is not None
         assert offer.valid_to is not None
-        assert offer.valid_from.tzinfo is not None
-        assert offer.valid_to.tzinfo is not None
+        assert isinstance(offer.valid_from, date)
+        assert isinstance(offer.valid_to, date)
 
     def test_missing_advertisers(self):
         data = {
@@ -106,17 +106,17 @@ class TestOfferFromApi:
 class TestOfferValidity:
     def test_valid_now(self, sample_offer_raw):
         offer = Offer.from_api(sample_offer_raw)
-        now = datetime(2025, 6, 1, 12, 0, 0, tzinfo=UTC)
+        now = date(2025, 6, 1)
         assert offer.is_valid_now(now)
 
     def test_expired(self, sample_offer_raw_expired):
         offer = Offer.from_api(sample_offer_raw_expired)
-        now = datetime(2025, 6, 1, 12, 0, 0, tzinfo=UTC)
+        now = date(2025, 6, 1)
         assert not offer.is_valid_now(now)
 
     def test_before_start(self, sample_offer_raw):
         offer = Offer.from_api(sample_offer_raw)
-        now = datetime(2025, 5, 1, 12, 0, 0, tzinfo=UTC)
+        now = date(2025, 5, 1)
         assert not offer.is_valid_now(now)
 
     def test_none_dates(self):
@@ -180,3 +180,33 @@ class TestParseDatetime:
     def test_invalid_format(self):
         dt = _parse_datetime("not-a-date")
         assert dt is None
+
+
+class TestRoundToDate:
+    def test_valid_from_before_noon(self):
+        dt = datetime(2026, 6, 1, 10, 0, 0, tzinfo=UTC)
+        assert _round_to_date(dt, is_start=True) == date(2026, 6, 1)
+
+    def test_valid_from_at_noon(self):
+        dt = datetime(2026, 6, 1, 12, 0, 0, tzinfo=UTC)
+        assert _round_to_date(dt, is_start=True) == date(2026, 6, 2)
+
+    def test_valid_from_after_noon(self):
+        dt = datetime(2026, 5, 31, 22, 0, 0, tzinfo=UTC)
+        assert _round_to_date(dt, is_start=True) == date(2026, 6, 1)
+
+    def test_valid_to_before_noon(self):
+        dt = datetime(2026, 6, 7, 9, 0, 0, tzinfo=UTC)
+        assert _round_to_date(dt, is_start=False) == date(2026, 6, 6)
+
+    def test_valid_to_at_noon(self):
+        dt = datetime(2026, 6, 7, 12, 0, 0, tzinfo=UTC)
+        assert _round_to_date(dt, is_start=False) == date(2026, 6, 7)
+
+    def test_valid_to_after_noon(self):
+        dt = datetime(2026, 6, 6, 21, 59, 0, tzinfo=UTC)
+        assert _round_to_date(dt, is_start=False) == date(2026, 6, 6)
+
+    def test_none(self):
+        assert _round_to_date(None, is_start=True) is None
+        assert _round_to_date(None, is_start=False) is None

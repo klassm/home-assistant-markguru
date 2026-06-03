@@ -188,7 +188,13 @@ def sample_offer_raw():
         "brand": {"name": "Franziskaner"},
         "product": {
             "name": "Franziskaner Weissbier 500ml",
-            "images": [{"url": "https://example.com/franziskaner.jpg"}],
+        },
+        "images": {
+            "urls": {
+                "small": "https://example.com/franziskaner-s.jpg",
+                "medium": "https://example.com/franziskaner-m.jpg",
+                "large": "https://example.com/franziskaner.jpg",
+            }
         },
         "advertisers": [{"name": "REWE"}],
         "validityDates": [
@@ -211,7 +217,11 @@ def sample_offer_raw_2():
         "brand": {"name": "Franziskaner"},
         "product": {
             "name": "Franziskaner Dunkel 500ml",
-            "images": [{"url": "https://example.com/franziskaner-dunkel.jpg"}],
+        },
+        "images": {
+            "urls": {
+                "large": "https://example.com/franziskaner-dunkel.jpg",
+            }
         },
         "advertisers": [{"name": "Kaufland"}],
         "validityDates": [
@@ -234,8 +244,8 @@ def sample_offer_raw_expired():
         "brand": {"name": "Franziskaner"},
         "product": {
             "name": "Franziskaner Weissbier 500ml",
-            "images": [],
         },
+        "images": {},
         "advertisers": [{"name": "REWE"}],
         "validityDates": [
             {
@@ -257,8 +267,8 @@ def sample_offer_raw_online():
         "brand": {"name": "Franziskaner"},
         "product": {
             "name": "Franziskaner Weissbier",
-            "images": [],
         },
+        "images": {},
         "advertisers": [{"name": "REWE"}],
         "validityDates": [
             {
@@ -280,8 +290,8 @@ def sample_offer_raw_wrong_retailer():
         "brand": {"name": "Franziskaner"},
         "product": {
             "name": "Franziskaner Weissbier",
-            "images": [],
         },
+        "images": {},
         "advertisers": [{"name": "SomeUnknownStore"}],
         "validityDates": [
             {

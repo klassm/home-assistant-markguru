@@ -42,11 +42,12 @@ class Offer:
         product_name = product.get("name") if product else None
 
         offer_images = data.get("images", {})
-        offer_urls = offer_images.get("urls", {}) if offer_images else {}
+        has_images = offer_images.get("count", 0) > 0 if offer_images else False
+        offer_id = data.get("id", "")
         image_url = (
-            offer_urls.get("large")
-            or offer_urls.get("medium")
-            or offer_urls.get("small")
+            f"https://mg2de.b-cdn.net/api/v1/offers/{offer_id}/images/default/0/large.jpg"
+            if has_images and offer_id
+            else None
         )
 
         return Offer(

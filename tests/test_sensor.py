@@ -4,7 +4,7 @@ from datetime import date
 from unittest.mock import MagicMock
 
 from custom_components.marktguru.models import Offer
-from custom_components.marktguru.sensor import NO_OFFER_TEXT, MarktguruOfferSensor
+from custom_components.marktguru.sensor import MarktguruOfferSensor
 
 
 def _make_coordinator(data, zip_code="86156", products=None):
@@ -66,7 +66,7 @@ class TestMarktguruOfferSensor:
             query="Franziskaner",
             zip_code="86156",
         )
-        assert sensor.native_value == NO_OFFER_TEXT
+        assert sensor.native_value is None
 
     def test_native_value_no_data(self):
         coordinator = _make_coordinator(None)
@@ -75,7 +75,7 @@ class TestMarktguruOfferSensor:
             query="Franziskaner",
             zip_code="86156",
         )
-        assert sensor.native_value == NO_OFFER_TEXT
+        assert sensor.native_value is None
 
     def test_native_value_query_not_in_data(self):
         coordinator = _make_coordinator({"OtherProduct": []})
@@ -84,7 +84,7 @@ class TestMarktguruOfferSensor:
             query="Franziskaner",
             zip_code="86156",
         )
-        assert sensor.native_value == NO_OFFER_TEXT
+        assert sensor.native_value is None
 
     def test_attributes_with_offers(self):
         offer1 = _make_offer(price=9.99, description="Best offer")

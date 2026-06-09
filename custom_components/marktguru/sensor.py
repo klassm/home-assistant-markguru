@@ -12,8 +12,6 @@ from .const import DOMAIN
 from .coordinator import MarktguruDataUpdateCoordinator
 from .models import Offer
 
-NO_OFFER_TEXT = "Kein Angebot"
-
 
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -53,10 +51,10 @@ class MarktguruOfferSensor(
         self._attr_native_unit_of_measurement = "€"
 
     @property
-    def native_value(self) -> str | float | None:
+    def native_value(self) -> float | None:
         offers = self._get_offers()
         if not offers:
-            return NO_OFFER_TEXT
+            return None
         return offers[0].price
 
     @property

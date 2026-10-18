@@ -114,9 +114,9 @@ def _round_to_date(dt: datetime | None, is_start: bool) -> date | None:
         return None
     if is_start:
         if dt.hour >= 12:
-            return (dt.date() + timedelta(days=1))
+            return dt.date() + timedelta(days=1)
         return dt.date()
     else:
         if dt.hour < 12:
-            return (dt.date() - timedelta(days=1))
+            return dt.date() - timedelta(days=1)
         return dt.date()

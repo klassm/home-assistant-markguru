@@ -16,7 +16,10 @@ class TestOfferFromApi:
         assert offer.brand_name == "Franziskaner"
         assert offer.product_name == "Franziskaner Weissbier 500ml"
         assert offer.retailer_name == "REWE"
-        assert offer.image_url == "https://mg2de.b-cdn.net/api/v1/offers/offer-1/images/default/0/large.jpg"
+        assert (
+            offer.image_url
+            == "https://mg2de.b-cdn.net/api/v1/offers/offer-1/images/default/0/large.jpg"
+        )
 
     def test_parsing_with_timezone(self, sample_offer_raw):
         offer = Offer.from_api(sample_offer_raw)
@@ -85,7 +88,10 @@ class TestOfferFromApi:
         assert d["price"] == 9.99
         assert d["description"] == "Franziskaner Weissbier"
         assert d["retailer_name"] == "REWE"
-        assert d["image_url"] == "https://mg2de.b-cdn.net/api/v1/offers/offer-1/images/default/0/large.jpg"
+        assert (
+            d["image_url"]
+            == "https://mg2de.b-cdn.net/api/v1/offers/offer-1/images/default/0/large.jpg"
+        )
         assert d["valid_from"] is not None
         assert d["valid_to"] is not None
 

@@ -20,8 +20,6 @@ from homeassistant.helpers.selector import (
 )
 
 from .api_client import MarktguruClient
-from .const import DEFAULT_API_KEY, DEFAULT_CLIENT_KEY
-from .const import DEFAULT_API_KEY, DEFAULT_CLIENT_KEY
 from .const import (
     CONF_ALLOWED_RETAILERS,
     CONF_API_KEY,
@@ -198,10 +196,12 @@ class MarktguruOptionsFlow(config_entries.OptionsFlow):
             step_id="init",
             data_schema=vol.Schema(
                 {
-                    vol.Required(CONF_PRODUCTS, default=current_products): SelectSelector(
-                        SelectSelectorConfig(
-                            multiple=True,
-                            custom_value=True,
+                    vol.Required(CONF_PRODUCTS, default=current_products): (
+                        SelectSelector(
+                            SelectSelectorConfig(
+                                multiple=True,
+                                custom_value=True,
+                            )
                         )
                     ),
                     vol.Required(

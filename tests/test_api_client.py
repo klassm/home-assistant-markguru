@@ -96,7 +96,10 @@ class TestSearchOffers:
 
     @pytest.mark.asyncio
     async def test_default_keys_used_when_not_provided(self):
-        from custom_components.marktguru.const import DEFAULT_API_KEY, DEFAULT_CLIENT_KEY
+        from custom_components.marktguru.const import (
+            DEFAULT_API_KEY,
+            DEFAULT_CLIENT_KEY,
+        )
 
         session = AsyncMock(spec=aiohttp.ClientSession)
         resp = _make_response(json_data={"results": []})
@@ -104,7 +107,6 @@ class TestSearchOffers:
 
         client = MarktguruClient(session=session)
 
-        call_kwargs = session.get.call_args
         assert client._headers["x-clientkey"] == DEFAULT_CLIENT_KEY
         assert client._headers["x-apikey"] == DEFAULT_API_KEY
 

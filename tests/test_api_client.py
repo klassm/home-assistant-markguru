@@ -5,7 +5,7 @@ from unittest.mock import AsyncMock, MagicMock
 import aiohttp
 import pytest
 
-from custom_components.marktguru.api_client import MarktguruClient
+from custom_components.marktguru.api_client import MarktguruApiError, MarktguruClient
 
 
 def _make_response(
@@ -65,8 +65,8 @@ class TestSearchOffers:
             client_key="test-client-key",
             api_key="test-api-key",
         )
-        offers = await client.search_offers("Franziskaner", "86156")
-        assert len(offers) == 0
+        with pytest.raises(MarktguruApiError):
+            await client.search_offers("Franziskaner", "86156")
 
     @pytest.mark.asyncio
     async def test_timeout(self):
@@ -78,8 +78,8 @@ class TestSearchOffers:
             client_key="test-client-key",
             api_key="test-api-key",
         )
-        offers = await client.search_offers("Franziskaner", "86156")
-        assert len(offers) == 0
+        with pytest.raises(MarktguruApiError):
+            await client.search_offers("Franziskaner", "86156")
 
     @pytest.mark.asyncio
     async def test_connection_error(self):
@@ -91,8 +91,22 @@ class TestSearchOffers:
             client_key="test-client-key",
             api_key="test-api-key",
         )
-        offers = await client.search_offers("Franziskaner", "86156")
-        assert len(offers) == 0
+        with pytest.raises(MarktguruApiError):
+            await client.search_offers("Franziskaner", "86156")
+
+    @pytest.mark.asyncio
+    async def test_default_keys_used_when_not_provided(self):
+        from custom_components.marktguru.const import DEFAULT_API_KEY, DEFAULT_CLIENT_KEY
+
+        session = AsyncMock(spec=aiohttp.ClientSession)
+        resp = _make_response(json_data={"results": []})
+        session.get = AsyncMock(return_value=resp)
+
+        client = MarktguruClient(session=session)
+
+        call_kwargs = session.get.call_args
+        assert client._headers["x-clientkey"] == DEFAULT_CLIENT_KEY
+        assert client._headers["x-apikey"] == DEFAULT_API_KEY
 
     @pytest.mark.asyncio
     async def test_headers_sent(self, sample_api_response):

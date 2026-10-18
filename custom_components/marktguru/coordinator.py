@@ -4,9 +4,9 @@ import logging
 from datetime import date, datetime, timedelta
 
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-from .api_client import MarktguruClient
+from .api_client import MarktguruApiError, MarktguruClient
 from .const import (
     EXCLUDE_KEYWORDS,
 )
@@ -52,7 +52,10 @@ class MarktguruDataUpdateCoordinator(DataUpdateCoordinator[dict[str, list[Offer]
     async def _async_update_data(self) -> dict[str, list[Offer]]:
         result: dict[str, list[Offer]] = {}
         for query in self._products:
-            offers = await self._client.search_offers(query, self._zip_code)
+            try:
+                offers = await self._client.search_offers(query, self._zip_code)
+            except MarktguruApiError as err:
+                raise UpdateFailed(err) from err
             filtered = _filter_offers(offers, self._allowed_retailers, EXCLUDE_KEYWORDS)
             sorted_offers = sorted(filtered, key=lambda o: o.price)
             result[query] = sorted_offers

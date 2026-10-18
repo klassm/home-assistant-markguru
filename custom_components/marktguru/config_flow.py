@@ -20,6 +20,8 @@ from homeassistant.helpers.selector import (
 )
 
 from .api_client import MarktguruClient
+from .const import DEFAULT_API_KEY, DEFAULT_CLIENT_KEY
+from .const import DEFAULT_API_KEY, DEFAULT_CLIENT_KEY
 from .const import (
     CONF_ALLOWED_RETAILERS,
     CONF_API_KEY,
@@ -49,8 +51,8 @@ class MarktguruConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     ) -> FlowResult:
         errors: dict[str, str] = {}
         if user_input is not None:
-            self._client_key = user_input[CONF_CLIENT_KEY]
-            self._api_key = user_input[CONF_API_KEY]
+            self._client_key = user_input.get(CONF_CLIENT_KEY, "")
+            self._api_key = user_input.get(CONF_API_KEY, "")
             self._zip_code = user_input[CONF_ZIP_CODE]
 
             session = async_get_clientsession(self.hass)
@@ -71,10 +73,10 @@ class MarktguruConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     vol.Required(CONF_ZIP_CODE): TextSelector(
                         TextSelectorConfig(type="text")
                     ),
-                    vol.Required(CONF_CLIENT_KEY): TextSelector(
+                    vol.Optional(CONF_CLIENT_KEY): TextSelector(
                         TextSelectorConfig(type="text")
                     ),
-                    vol.Required(CONF_API_KEY): TextSelector(
+                    vol.Optional(CONF_API_KEY): TextSelector(
                         TextSelectorConfig(type="text")
                     ),
                 }
@@ -87,8 +89,9 @@ class MarktguruConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     ) -> FlowResult:
         errors: dict[str, str] = {}
         if user_input is not None:
-            products_raw = user_input.get(CONF_PRODUCTS, "")
-            products = [p.strip() for p in products_raw.split(",") if p.strip()]
+            products = [
+                p.strip() for p in user_input.get(CONF_PRODUCTS, []) if p.strip()
+            ]
 
             allowed_retailers = user_input.get(
                 CONF_ALLOWED_RETAILERS, DEFAULT_ALLOWED_RETAILERS
@@ -113,8 +116,11 @@ class MarktguruConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             step_id="products",
             data_schema=vol.Schema(
                 {
-                    vol.Required(CONF_PRODUCTS): TextSelector(
-                        TextSelectorConfig(type="text")
+                    vol.Required(CONF_PRODUCTS): SelectSelector(
+                        SelectSelectorConfig(
+                            multiple=True,
+                            custom_value=True,
+                        )
                     ),
                     vol.Required(
                         CONF_ALLOWED_RETAILERS, default=DEFAULT_ALLOWED_RETAILERS
@@ -147,8 +153,9 @@ class MarktguruOptionsFlow(config_entries.OptionsFlow):
     ) -> FlowResult:
         errors: dict[str, str] = {}
         if user_input is not None:
-            products_raw = user_input.get(CONF_PRODUCTS, "")
-            products = [p.strip() for p in products_raw.split(",") if p.strip()]
+            products = [
+                p.strip() for p in user_input.get(CONF_PRODUCTS, []) if p.strip()
+            ]
 
             allowed_retailers = user_input.get(
                 CONF_ALLOWED_RETAILERS,
@@ -191,9 +198,12 @@ class MarktguruOptionsFlow(config_entries.OptionsFlow):
             step_id="init",
             data_schema=vol.Schema(
                 {
-                    vol.Required(
-                        CONF_PRODUCTS, default=", ".join(current_products)
-                    ): TextSelector(TextSelectorConfig(type="text")),
+                    vol.Required(CONF_PRODUCTS, default=current_products): SelectSelector(
+                        SelectSelectorConfig(
+                            multiple=True,
+                            custom_value=True,
+                        )
+                    ),
                     vol.Required(
                         CONF_ALLOWED_RETAILERS, default=current_retailers
                     ): SelectSelector(

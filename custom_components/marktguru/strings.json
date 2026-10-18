@@ -6,15 +6,15 @@
         "description": "Set up your Marktguru integration",
         "data": {
           "zip_code": "Zip Code",
-          "client_key": "Client Key (x-clientkey header)",
-          "api_key": "API Key (x-apikey header)"
+          "client_key": "Client Key (x-clientkey header, optional)",
+          "api_key": "API Key (x-apikey header, optional)"
         }
       },
       "products": {
         "title": "Products & Retailers",
         "description": "Configure which products and retailers to track",
         "data": {
-          "products": "Products (comma-separated)",
+          "products": "Products",
           "allowed_retailers": "Allowed Retailers"
         }
       }
@@ -30,7 +30,7 @@
         "title": "Marktguru Options",
         "description": "Update your product tracking preferences",
         "data": {
-          "products": "Products (comma-separated)",
+          "products": "Products",
           "allowed_retailers": "Allowed Retailers",
           "scan_interval": "Update Interval (hours)"
         }

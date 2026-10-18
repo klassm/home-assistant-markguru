@@ -27,8 +27,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     client = MarktguruClient(
         session=async_get_clientsession(hass),
-        client_key=entry.data[CONF_CLIENT_KEY],
-        api_key=entry.data[CONF_API_KEY],
+        client_key=entry.data.get(CONF_CLIENT_KEY) or None,
+        api_key=entry.data.get(CONF_API_KEY) or None,
     )
 
     products = entry.options.get(CONF_PRODUCTS, entry.data.get(CONF_PRODUCTS, []))

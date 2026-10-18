@@ -42,6 +42,11 @@ KNOWN_RETAILERS = [
 
 API_URL = "https://api.marktguru.de/api/v1/offers/search"
 
+# Public keys embedded in the Marktguru web app; shared publicly by the
+# community (see thorschtn/ha-marktguru). They are not secrets.
+DEFAULT_CLIENT_KEY = "WU/RH+PMGDi+gkZer3WbMelt6zcYHSTytNB7VpTia90="
+DEFAULT_API_KEY = "8Kk+pmbf7TgJ9nVj2cXeA7P5zBGv8iuutVVMRfOfvNE="
+
 EXCLUDE_KEYWORDS = ["online", "app-coupon"]
 
 API_LIMIT = 24

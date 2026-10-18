@@ -6,23 +6,27 @@ from typing import Any
 
 import aiohttp
 
-from .const import API_LIMIT, API_URL
+from .const import API_LIMIT, API_URL, DEFAULT_API_KEY, DEFAULT_CLIENT_KEY
 from .models import Offer
 
 logger = logging.getLogger(__name__)
+
+
+class MarktguruApiError(Exception):
+    """Raised when the Marktguru API request fails."""
 
 
 class MarktguruClient:
     def __init__(
         self,
         session: aiohttp.ClientSession,
-        client_key: str,
-        api_key: str,
+        client_key: str | None = None,
+        api_key: str | None = None,
     ) -> None:
         self._session = session
         self._headers = {
-            "x-clientkey": client_key,
-            "x-apikey": api_key,
+            "x-clientkey": client_key or DEFAULT_CLIENT_KEY,
+            "x-apikey": api_key or DEFAULT_API_KEY,
         }
 
     async def search_offers(
@@ -46,12 +50,14 @@ class MarktguruClient:
                 )
                 resp.raise_for_status()
                 data = await resp.json()
-        except TimeoutError:
-            logger.warning("Timeout fetching offers for query '%s'", query)
-            return []
+        except TimeoutError as err:
+            raise MarktguruApiError(
+                f"Timeout fetching offers for query '{query}'"
+            ) from err
         except aiohttp.ClientError as err:
-            logger.warning("Error fetching offers for query '%s': %s", query, err)
-            return []
+            raise MarktguruApiError(
+                f"Error fetching offers for query '{query}': {err}"
+            ) from err
 
         results = data.get("results", [])
         return [Offer.from_api(r) for r in results]

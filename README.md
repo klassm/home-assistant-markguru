@@ -34,9 +34,9 @@ Copy the `custom_components/marktguru/` directory to your Home Assistant `custom
 | Field | Description |
 |-------|-------------|
 | Zip Code | Your postal code for location-based offers |
-| Client Key | The `x-clientkey` header value |
-| API Key | The `x-apikey` header value |
-| Products | Comma-separated search terms (e.g., "Franziskaner, Paulaner") |
+| Client Key | The `x-clientkey` header value (optional — built-in defaults are used if left empty) |
+| API Key | The `x-apikey` header value (optional — built-in defaults are used if left empty) |
+| Products | Search terms, added one by one via the "Add item" field |
 | Allowed Retailers | Select which retailers to include |
 | Update Interval | How often to check for new offers (1-24 hours, default 12) |
 
@@ -61,4 +61,4 @@ entity: sensor.marktguru_franziskaner_86156
 
 ## Obtaining API Keys
 
-The client key and API key are extracted from the Marktguru web app headers. See the [ha-marktguru](https://github.com/thorschtn/ha-marktguru) project for reference.
+The integration ships with the public keys used by the Marktguru web app, so you normally don't need to enter anything here. If the built-in keys stop working (Marktguru occasionally rotates them), you can extract the current `x-clientkey` and `x-apikey` header values from the Marktguru web app yourself. See the [ha-marktguru](https://github.com/thorschtn/ha-marktguru) project for reference.

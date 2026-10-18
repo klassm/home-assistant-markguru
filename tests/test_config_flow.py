@@ -109,7 +109,7 @@ class TestConfigFlowStepProducts:
 
         result = await flow.async_step_products(
             {
-                CONF_PRODUCTS: "",
+                CONF_PRODUCTS: [],
                 CONF_ALLOWED_RETAILERS: DEFAULT_ALLOWED_RETAILERS,
             }
         )
@@ -128,7 +128,7 @@ class TestConfigFlowStepProducts:
 
         result = await flow.async_step_products(
             {
-                CONF_PRODUCTS: "Franziskaner, Paulaner",
+                CONF_PRODUCTS: ["Franziskaner", "Paulaner"],
                 CONF_ALLOWED_RETAILERS: DEFAULT_ALLOWED_RETAILERS,
             }
         )
@@ -152,7 +152,7 @@ class TestConfigFlowStepProducts:
 
         result = await flow.async_step_products(
             {
-                CONF_PRODUCTS: "  Franziskaner ,  Paulaner  ",
+                CONF_PRODUCTS: ["  Franziskaner ", " Paulaner  "],
                 CONF_ALLOWED_RETAILERS: DEFAULT_ALLOWED_RETAILERS,
             }
         )
@@ -203,7 +203,7 @@ class TestOptionsFlow:
 
         result = await flow.async_step_init(
             {
-                CONF_PRODUCTS: "Franziskaner, Paulaner",
+                CONF_PRODUCTS: ["Franziskaner", "Paulaner"],
                 CONF_ALLOWED_RETAILERS: ["REWE", "Kaufland"],
                 CONF_SCAN_INTERVAL: 6,
             }
@@ -231,7 +231,7 @@ class TestOptionsFlow:
 
         result = await flow.async_step_init(
             {
-                CONF_PRODUCTS: "",
+                CONF_PRODUCTS: [],
                 CONF_ALLOWED_RETAILERS: DEFAULT_ALLOWED_RETAILERS,
                 CONF_SCAN_INTERVAL: 12,
             }

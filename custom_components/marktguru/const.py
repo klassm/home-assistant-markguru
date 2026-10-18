@@ -1,4 +1,5 @@
 DOMAIN = "marktguru"
+CONFIG_VERSION = 2
 
 CONF_ZIP_CODE = "zip_code"
 CONF_CLIENT_KEY = "client_key"

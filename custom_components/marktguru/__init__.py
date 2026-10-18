@@ -13,6 +13,7 @@ from .const import (
     CONF_PRODUCTS,
     CONF_SCAN_INTERVAL,
     CONF_ZIP_CODE,
+    CONFIG_VERSION,
     DEFAULT_ALLOWED_RETAILERS,
     DEFAULT_SCAN_INTERVAL,
     DOMAIN,
@@ -20,6 +21,28 @@ from .const import (
 from .coordinator import MarktguruDataUpdateCoordinator
 
 PLATFORMS = [Platform.SENSOR]
+
+
+async def async_migrate_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    if entry.version > CONFIG_VERSION:
+        return False
+
+    if entry.version < CONFIG_VERSION:
+        data = {
+            key: value
+            for key, value in entry.data.items()
+            if key not in (CONF_CLIENT_KEY, CONF_API_KEY)
+        }
+        products = data.get(CONF_PRODUCTS)
+        if isinstance(products, str):
+            data[CONF_PRODUCTS] = [
+                p.strip() for p in products.split(",") if p.strip()
+            ]
+        hass.config_entries.async_update_entry(
+            entry, data=data, version=CONFIG_VERSION
+        )
+
+    return True
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:

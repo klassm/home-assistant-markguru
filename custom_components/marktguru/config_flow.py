@@ -116,6 +116,7 @@ class MarktguruConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 {
                     vol.Required(CONF_PRODUCTS): SelectSelector(
                         SelectSelectorConfig(
+                            options=[],
                             multiple=True,
                             custom_value=True,
                         )
@@ -199,6 +200,7 @@ class MarktguruOptionsFlow(config_entries.OptionsFlow):
                     vol.Required(CONF_PRODUCTS, default=current_products): (
                         SelectSelector(
                             SelectSelectorConfig(
+                                options=[],
                                 multiple=True,
                                 custom_value=True,
                             )

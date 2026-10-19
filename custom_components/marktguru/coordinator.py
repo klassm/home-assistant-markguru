@@ -62,6 +62,18 @@ class MarktguruDataUpdateCoordinator(DataUpdateCoordinator[dict[str, list[Offer]
         return result
 
 
+def _retailer_matches(retailer: str, allowed: str) -> bool:
+    r = retailer.strip().casefold()
+    a = allowed.strip().casefold()
+    if not r or not a:
+        return False
+    if r == a:
+        return True
+    # Location-qualified names like "REWE Center" or "Edeka E-Center"
+    # should still match the plain retailer name.
+    return r.startswith(a + " ") or a.startswith(r + " ")
+
+
 def _filter_offers(
     offers: list[Offer],
     allowed_retailers: list[str],
@@ -72,7 +84,10 @@ def _filter_offers(
     for offer in offers:
         if not offer.is_valid_now(now):
             continue
-        if offer.retailer_name not in allowed_retailers:
+        if not any(
+            _retailer_matches(offer.retailer_name, allowed)
+            for allowed in allowed_retailers
+        ):
             continue
         if offer.is_excluded(exclude_keywords):
             continue

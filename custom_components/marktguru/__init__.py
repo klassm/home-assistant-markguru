@@ -35,12 +35,8 @@ async def async_migrate_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         }
         products = data.get(CONF_PRODUCTS)
         if isinstance(products, str):
-            data[CONF_PRODUCTS] = [
-                p.strip() for p in products.split(",") if p.strip()
-            ]
-        hass.config_entries.async_update_entry(
-            entry, data=data, version=CONFIG_VERSION
-        )
+            data[CONF_PRODUCTS] = [p.strip() for p in products.split(",") if p.strip()]
+        hass.config_entries.async_update_entry(entry, data=data, version=CONFIG_VERSION)
 
     return True
 

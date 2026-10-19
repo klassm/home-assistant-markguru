@@ -52,6 +52,29 @@ class TestFilterOffers:
         filtered = _filter_offers(offers, ["REWE"], ["online"], now=FILTER_NOW)
         assert len(filtered) == 0
 
+    def test_retailer_prefix_match(self, sample_offer_raw):
+        """Location-qualified retailer names like 'REWE Center' match 'REWE'."""
+        raw = dict(sample_offer_raw)
+        raw["advertisers"] = [{"name": "REWE Center"}]
+        offers = [Offer.from_api(raw)]
+        filtered = _filter_offers(offers, ["REWE"], ["online"], now=FILTER_NOW)
+        assert len(filtered) == 1
+
+    def test_retailer_match_is_case_insensitive(self, sample_offer_raw):
+        raw = dict(sample_offer_raw)
+        raw["advertisers"] = [{"name": "rewe center"}]
+        offers = [Offer.from_api(raw)]
+        filtered = _filter_offers(offers, ["REWE"], ["online"], now=FILTER_NOW)
+        assert len(filtered) == 1
+
+    def test_retailer_partial_word_not_matched(self, sample_offer_raw):
+        """'Rewe' must not match 'Reweconut' - only word boundaries count."""
+        raw = dict(sample_offer_raw)
+        raw["advertisers"] = [{"name": "Reweconut"}]
+        offers = [Offer.from_api(raw)]
+        filtered = _filter_offers(offers, ["REWE"], ["online"], now=FILTER_NOW)
+        assert len(filtered) == 0
+
     def test_empty_offers_list(self):
         filtered = _filter_offers([], ["REWE"], ["online"], now=FILTER_NOW)
         assert len(filtered) == 0
